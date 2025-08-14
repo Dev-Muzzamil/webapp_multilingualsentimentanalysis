@@ -31,14 +31,23 @@ exports.analyze = async (req, res) => {
     // Step 4: Sentiment Analysis
     const sentiment = await analyzeSentiment(cleanText, language);
 
-    // Step 5: Save to Firestore
+    // Step 5: Save to Firestore (optional - continue if it fails)
     const result = {
       text,
       language,
       translation,
       sentiment,
+      timestamp: new Date().toISOString(),
+      processingTime: Date.now()
     };
-    await saveResult(result);
+    
+    try {
+      const docId = await saveResult(result);
+      result.id = docId;
+    } catch (dbError) {
+      console.warn('Failed to save to database, continuing without persistence:', dbError.message);
+      result.warning = 'Result not persisted - database unavailable';
+    }
 
     // Step 6: Respond
     res.json(result);
