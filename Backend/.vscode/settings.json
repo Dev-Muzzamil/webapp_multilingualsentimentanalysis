@@ -1,0 +1,10 @@
+{
+    "terminal.integrated.suggest.enabled": true,
+    "terminal.integrated.stickyScroll.enabled": true,
+    "terminal.integrated.shellIntegration.environmentReporting": true,
+    "python.testing.pytestArgs": [
+        "src"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

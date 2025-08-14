@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "server for multilingial live stream sentiument analysis",
+  "homepage": "https://github.com/Developer-Muzzamil/mllsa_codeswitching_gcp_backend#readme",
+  "bugs": {
+    "url": "https://github.com/Developer-Muzzamil/mllsa_codeswitching_gcp_backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Developer-Muzzamil/mllsa_codeswitching_gcp_backend.git"
+  },
+  "license": "ISC",
+  "author": "Dev_Ale",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.4.0",
+    "stopwords-bn": "^0.1.0",
+    "stopwords-vi": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
