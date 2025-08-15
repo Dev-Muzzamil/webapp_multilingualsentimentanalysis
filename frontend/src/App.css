@@ -1,0 +1,107 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+}
+
+.app-main {
+  flex: 1;
+  padding-left: 0;
+  transition: margin-left 0.3s ease;
+  overflow-x: auto;
+}
+
+.app-main.sidebar-open {
+  margin-left: 240px;
+}
+
+@media (max-width: 768px) {
+  .app-main.sidebar-open {
+    margin-left: 0;
+  }
+}
+
+/* Sentiment Analysis Styles */
+.sentiment-positive {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.sentiment-negative {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.sentiment-neutral {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+/* Chart Container */
+.chart-container {
+  position: relative;
+  height: 400px;
+  margin: 16px 0;
+}
+
+.chart-container canvas {
+  max-height: 400px !important;
+}
+
+/* Real-time indicator */
+.real-time-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.real-time-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4caf50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Error message */
+.error-message {
+  color: #f44336;
+  background-color: #ffebee;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+/* Success message */
+.success-message {
+  color: #4caf50;
+  background-color: #e8f5e8;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 16px 0;
+}
