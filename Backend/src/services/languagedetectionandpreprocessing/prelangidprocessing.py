@@ -6,9 +6,9 @@ import re
 import unicodedata
 
 
-# Core patterns (improved)
 EMAIL_PATTERN = re.compile(r"\b[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}(?=\b|\s|$|[.,!?;:])", re.IGNORECASE)
 URL_PATTERN = re.compile(r"(?:https?://|www\.|ftp://)\S+|(?:\w+\.)+(?:com|org|net|edu|gov|mil|co|io|ai|in|uk|us|info|biz|me|tv|ca|de|fr|jp|ru|cn|br|au|es|it|nl|se|no|fi|pl|ch|be|at|dk|tr|ir|gr|cz|pt|hu|il|za|mx|kr|sg|hk|tw|vn|id|my|ph|th|sa|ae|nz|cl|ar|ro|sk|bg|lt|lv|ee|hr|si|rs|ua|by|kz|ge|az|md|lu|li|is|mc|sm|ad|fo|gl|gi|je|gg|im|eu)(?:/\S*)?", re.IGNORECASE)
+# Core patterns (improved)
 
 # Social media specific patterns
 MENTION_PATTERN = re.compile(r"@[\w_]+")
@@ -42,33 +42,32 @@ FILE_EXTENSIONS = re.compile(r"\S+\.[a-zA-Z0-9]{2,4}(?=\s|$)")
 CRYPTO_PATTERN = re.compile(r"\b(?:bc1|[13])[a-zA-HJ-NP-Z0-9]{25,62}\b|\b0x[a-fA-F0-9]{40}\b")
 
 
-def normalize_repeated_chars(text, max_repeats=2):
-    """Normalize repeated characters (e.g., 'sooooo' -> 'soo')"""
-    def replace_repeated(match):
-        char = match.group(1)
-        return char * min(len(match.group(0)), max_repeats)
-    
-    return REPEATED_CHARS.sub(replace_repeated, text)
+# def normalize_repeated_chars(text, max_repeats=2):
+#     """Normalize repeated characters (e.g., 'sooooo' -> 'soo')"""
+#     def replace_repeated(match):
+#         char = match.group(1)
+#         return char * min(len(match.group(0)), max_repeats)
+#     return REPEATED_CHARS.sub(replace_repeated, text)
 
 
-def normalize_unicode(text):
-    """Normalize Unicode characters to their closest ASCII equivalents where possible"""
-    # Normalize to NFKD form and remove diacritics
-    normalized = unicodedata.normalize('NFKD', text)
-    # Keep only ASCII characters and common punctuation
-    ascii_text = ''.join(c for c in normalized if ord(c) < 128 or c in '""''—–')
-    return ascii_text
+# def normalize_unicode(text):
+#     """Normalize Unicode characters to their closest ASCII equivalents where possible"""
+#     # Normalize to NFKD form and remove diacritics
+#     normalized = unicodedata.normalize('NFKD', text)
+#     # Keep only ASCII characters and common punctuation
+#     ascii_text = ''.join(c for c in normalized if ord(c) < 128 or c in '""''—–')
+#     return ascii_text
 
 
-def remove_excessive_punctuation(text):
-    """Replace excessive punctuation with single instances"""
-    return EXCESSIVE_PUNCT.sub(lambda m: m.group(0)[0], text)
+# def remove_excessive_punctuation(text):
+#     """Replace excessive punctuation with single instances"""
+#     return EXCESSIVE_PUNCT.sub(lambda m: m.group(0)[0], text)
 
 
 def prelangid_clean(text, 
-                   remove_emojis=True, 
-                   normalize_unicode_chars=True,
-                   normalize_repeated=True,
+                  # remove_emojis=True, 
+                  # normalize_unicode_chars=True,
+                  # normalize_repeated=True,
                    remove_phone_numbers=True,
                    remove_crypto=True,
                    preserve_mention_text=False,
@@ -129,22 +128,22 @@ def prelangid_clean(text,
     text = STANDALONE_NUMBERS.sub(" ", text)
     
     # Remove or normalize special characters
-    if remove_emojis:
-        text = EMOJI_PATTERN.sub(" ", text)
+    # if remove_emojis:
+    #     text = EMOJI_PATTERN.sub(" ", text)
     
     # Normalize text patterns
-    if normalize_repeated:
-        text = normalize_repeated_chars(text)
+    # if normalize_repeated:
+    #     text = normalize_repeated_chars(text)
     
-    text = remove_excessive_punctuation(text)
+    # text = remove_excessive_punctuation(text)
     
     # Normalize whitespace (including Unicode whitespace)
     text = UNICODE_WHITESPACE.sub(" ", text)
     text = WHITESPACE_PATTERN.sub(" ", text)
     
     # Unicode normalization (should be done after other cleaning)
-    if normalize_unicode_chars:
-        text = normalize_unicode(text)
+    # if normalize_unicode_chars:
+    #     text = normalize_unicode(text)
     
     # Final cleanup
     text = text.strip()
@@ -173,31 +172,14 @@ def prelangid_clean_batch(texts, **kwargs):
 def simple_clean(text):
     """Simple cleaning function for backward compatibility"""
     return prelangid_clean(text, 
-                          remove_emojis=True,
-                          normalize_unicode_chars=False,
-                          normalize_repeated=True,
+                         # remove_emojis=True,
+                        #  normalize_unicode_chars=False,
+                        #  normalize_repeated=True,
                           preserve_mention_text=False,
                           preserve_hashtag_text=False)
 
 
 if __name__ == "__main__":
     print("[DEBUG] Entered __main__ test block")
-    # Test examples
-    test_texts = [
-        "RT @user: Check out this amazing website! https://example.com #awesome #AI 🚀🔥",
-        "Contact me at john.doe@email.com or call (555) 123-4567!!!",
-        "Sooooo excited about this new feature!!! Can't wait to try it out...",
-        "投資 $AAPL stock now! Visit www.trading.com for more info",
-        "HTML content: <div>Hello &amp; welcome!</div>",
-        "Crypto address: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
-    ]
-    print("Original vs Cleaned texts:")
-    print("=" * 50)
-    print("[DEBUG] Starting test loop")
-    for text in test_texts:
-        print("[DEBUG] Cleaning text:", text)
-        cleaned = prelangid_clean(text)
-        print(f"Original: {text}")
-        print(f"Cleaned:  {cleaned}")
-        print("-" * 30)
+    # Test examples (functionality for normalization, emoji removal, etc. is commented out)
     print("[DEBUG] Finished test loop")

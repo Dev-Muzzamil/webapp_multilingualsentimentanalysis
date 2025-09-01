@@ -1,3 +1,7 @@
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import BadRequest
 import sys
@@ -25,6 +29,7 @@ from src.services.languagedetectionandpreprocessing.postlangidprocessing import 
 
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
 
 @app.route('/health', methods=['GET'])
@@ -74,13 +79,13 @@ def detect_and_preprocess():
     try:
         # STEP 1: Pre-language-id processing
         print(f"[DEBUG] Original text: {repr(text)}")
-        precleaned_text = prelangid_clean(text, remove_emojis=False)
+        precleaned_text = prelangid_clean(text)
         print(f"[DEBUG] After prelangid_clean: {repr(precleaned_text)}")
-        
+
         # Check if text is empty after cleaning
         if not precleaned_text.strip():
             return jsonify({
-                'languages': [], 
+                'languages': [],
                 'message': 'Text became empty after preprocessing',
                 'original_text': text
             })
@@ -89,17 +94,17 @@ def detect_and_preprocess():
         print("[DEBUG] Sending to bv2 for language detection...")
         detection_result = detect_languages(precleaned_text)
         print(f"[DEBUG] bv2 detection result: {detection_result}")
-        
+
         # STEP 3: Post-language-id processing for each detected segment
         processed_languages = []
         for segment, detected_lang in detection_result:
             if detected_lang in TOP_20_LANGS:
                 print(f"[DEBUG] Processing segment '{segment}' with language '{detected_lang}'")
-                
+
                 # Apply language-specific post-processing
                 cleaned_segment = postlangid_process(segment, detected_lang, lang_preprocessors)
                 print(f"[DEBUG] After postlangid_process: {repr(cleaned_segment)}")
-                
+
                 processed_languages.append({
                     'original_segment': segment,
                     'language': detected_lang,
@@ -109,7 +114,7 @@ def detect_and_preprocess():
             else:
                 # Language not in supported list
                 print(f"[DEBUG] Skipping unsupported language: {detected_lang}")
-        
+
         return jsonify({
             'languages': processed_languages,
             'preprocessing_info': {
@@ -118,7 +123,6 @@ def detect_and_preprocess():
                 'segments_processed': len(processed_languages)
             }
         })
-        
     except Exception as e:
         print(f"[ERROR] Exception in detect_and_preprocess: {str(e)}")
         return jsonify({'error': str(e), 'languages': []}), 500
@@ -158,9 +162,7 @@ def process_pipeline():
         # STEP 1: Pre-language-id processing with custom options
         original_text = text
         precleaned_text = prelangid_clean(
-            text, 
-            remove_emojis=remove_emojis,
-            normalize_unicode_chars=normalize_unicode_chars,
+            text,
             preserve_hashtag_text=preserve_hashtag_text,
             preserve_mention_text=preserve_mention_text
         )

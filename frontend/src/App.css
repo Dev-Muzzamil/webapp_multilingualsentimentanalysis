@@ -9,19 +9,30 @@
   flex: 1;
 }
 
+
 .app-main {
   flex: 1;
   padding-left: 0;
   transition: margin-left 0.3s ease;
   overflow-x: auto;
+  padding-top: 64px; /* Height of AppBar for desktop */
 }
 
-.app-main.sidebar-open {
-  margin-left: 240px;
+@media (max-width: 599.95px) {
+  .app-main {
+    margin-left: 0;
+    padding-top: 56px; /* Height of AppBar for mobile */
+  }
 }
 
-@media (max-width: 768px) {
-  .app-main.sidebar-open {
+@media (min-width: 600px) {
+  .app-main {
+    margin-left: 240px;
+  }
+}
+
+@media (max-width: 599.95px) {
+  .app-main {
     margin-left: 0;
   }
 }

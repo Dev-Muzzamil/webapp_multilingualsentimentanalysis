@@ -1,4 +1,4 @@
-const { getResults, getAnalytics, getResult, deleteResult } = require('../services/dbService');
+const { getResults, getAnalytics, getResult, deleteResult } = require('../services/core/dbService');
 
 exports.getResults = async (req, res) => {
   try {

@@ -8,6 +8,7 @@ const keyFilename = process.env.FIRESTORE_KEY_PATH || process.env.GOOGLE_APPLICA
 const firestoreOptions = {
   projectId,
   databaseId,
+  ignoreUndefinedProperties: true
 };
 
 // Only set keyFilename if available (not needed on GCP)

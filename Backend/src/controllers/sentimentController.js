@@ -1,58 +1,35 @@
-const { detectLanguage } = require('../services/languageDetectionService');
-const { translateText } = require('../services/translationService');
-const { preprocessText } = require('../services/preprocessingService');
-const { analyzeSentiment } = require('../services/sentimentService');
-const { saveResult } = require('../services/dbService');
+const pipeline = require('../services/pipelineService');
+const { v4: uuidv4 } = require('uuid');
 
+/**
+ * Analyzes a single piece of text by sending it through the main processing pipeline.
+ */
 exports.analyze = async (req, res) => {
   try {
     const { text } = req.body;
     if (!text) {
-      return res.status(400).json({ error: 'Text is required.' });
+      return res.status(400).json({ success: false, error: 'Text is required.' });
     }
 
-    // Step 1: Language Detection
-    const language = await detectLanguage(text);
-
-    // Log for debugging
-    console.log(`Detected language: ${language}`);
-
-    // Step 2: Translation (if not English)
-    let processedText = text;
-    let translation = null;
-    if (language !== 'en') {
-      translation = await translateText(text, 'en');
-      processedText = translation;
-    }
-
-    // Step 3: Preprocessing
-    const cleanText = preprocessText(processedText);
-
-    // Step 4: Sentiment Analysis
-    const sentiment = await analyzeSentiment(cleanText, language);
-
-    // Step 5: Save to Firestore (optional - continue if it fails)
-    const result = {
-      text,
-      language,
-      translation,
-      sentiment,
+    // Create a unified data object for the ad-hoc text
+    const dataItem = {
+      source: 'direct',
+      id: uuidv4(), // Generate a unique ID for traceability
       timestamp: new Date().toISOString(),
-      processingTime: Date.now()
+      text: text
     };
-    
-    try {
-      const docId = await saveResult(result);
-      result.id = docId;
-    } catch (dbError) {
-      console.warn('Failed to save to database, continuing without persistence:', dbError.message);
-      result.warning = 'Result not persisted - database unavailable';
-    }
 
-    // Step 6: Respond
-    res.json(result);
+    // Process the single item through the pipeline
+    const result = await pipeline.process(dataItem);
+
+    res.json({ success: true, data: result });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal server error.' });
+    console.error('Error in analyze controller:', err);
+    res.status(500).json({
+        success: false,
+        error: 'Failed to analyze text',
+        message: err.message
+    });
   }
 };

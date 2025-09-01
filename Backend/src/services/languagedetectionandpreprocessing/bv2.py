@@ -100,7 +100,10 @@ TOP_20_LANGS = {
 }
 
 TRANSFORMER_MODEL = "papluca/xlm-roberta-base-language-detection"
-FASTTEXT_PATH_DEFAULT = os.environ.get("POLYLANGID_FASTTEXT_PATH","lid.176.ftz")
+FASTTEXT_PATH_DEFAULT = os.environ.get(
+    "POLYLANGID_FASTTEXT_PATH",
+    os.path.join(os.path.dirname(__file__), "lid.176.ftz")
+)
 FASTTEXT_FALLBACK_PATH = os.environ.get("POLYLANGID_FASTTEXT_FALLBACK","")
 TRANSFORMER_FP16 = True
 TRANSFORMER_BATCH_SIZE = 64 if _torch_cuda else 16

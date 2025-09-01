@@ -8,10 +8,10 @@ router.get('/sources', dataSourceController.getSupportedSources);
 // Get status of data source APIs
 router.get('/sources/status', dataSourceController.getSourceStatus);
 
-// Validate source ID for a given source type
-router.get('/sources/:sourceType/validate/:sourceId', dataSourceController.validateSource);
+// Collect and analyze data from a specific source (using ID)
+router.post('/sources/:sourceType/:sourceId/collect', dataSourceController.collectAndAnalyze);
 
-// Collect data from a specific source
-router.post('/sources/:sourceType/:sourceId/collect', dataSourceController.collectData);
+// Collect and analyze data from a YouTube video URL
+router.post('/sources/youtube/collect/url', dataSourceController.collectAndAnalyzeFromUrl);
 
 module.exports = router;

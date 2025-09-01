@@ -1,10 +1,10 @@
 const { Server } = require('socket.io');
-const { DataSourceService } = require('./dataSourceService');
-const { detectLanguage } = require('./languageDetectionService');
+const { DataSourceService } = require('./dataCollectionServices/dataSourceService');
+const { detectLanguage } = require('./languagedetectionandpreprocessing/languageDetectionService');
 const { translateText } = require('./translationService');
-const { preprocessText, extractTextFromSource } = require('./preprocessingService');
+const { preprocessText, extractTextFromSource } = require('./languagedetectionandpreprocessing/preprocessingService');
 const { analyzeSentiment } = require('./sentimentService');
-const { saveResult } = require('./dbService');
+const { saveResult } = require('./core/dbService');
 
 class RealTimeService {
   constructor() {

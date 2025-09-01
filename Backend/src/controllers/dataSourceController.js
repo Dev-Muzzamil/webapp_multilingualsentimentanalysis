@@ -1,37 +1,95 @@
-const { DataSourceService } = require('../services/dataSourceService');
+const { DataSourceService } = require('../services/dataCollectionServices/dataSourceService');
+const pipeline = require('../services/pipelineService');
+const { getYouTubeVideoId } = require('../utils/urlUtils');
 
 const dataSourceService = new DataSourceService();
 
-exports.collectData = async (req, res) => {
+/**
+ * Collects data from a specified source and runs it through the analysis pipeline.
+ */
+exports.collectAndAnalyze = async (req, res) => {
   try {
     const { sourceType, sourceId } = req.params;
     const options = req.body || {};
 
     if (!sourceType || !sourceId) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Source type and source ID are required' 
+      return res.status(400).json({
+        success: false,
+        error: 'Source type and source ID are required'
       });
     }
 
-    const data = await dataSourceService.collectData(sourceType, sourceId, options);
-    
+    // 1. Collect data from the source - returns an array of unified objects
+    const dataItems = await dataSourceService.collectData(sourceType, sourceId, options);
+
+    if (!dataItems || dataItems.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No new items to process.',
+        data: []
+      });
+    }
+
+    // 2. Process each item through the pipeline in parallel
+    const processingPromises = dataItems.map(item => pipeline.process(item));
+    const results = await Promise.all(processingPromises);
+
     res.json({
       success: true,
-      data,
-      sourceType,
-      sourceId,
-      timestamp: new Date().toISOString()
+      message: `Successfully processed ${results.length} items.`,
+      data: results
     });
+
   } catch (error) {
-    console.error('Error collecting data:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to collect data from source',
+    console.error(`Error in collectAndAnalyze for ${req.params.sourceType}:`, error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to collect and analyze data',
       message: error.message
     });
   }
 };
+
+/**
+ * Collects data from a YouTube video URL and runs it through the analysis pipeline.
+ */
+exports.collectAndAnalyzeFromUrl = async (req, res) => {
+  try {
+    const { videoUrl } = req.body;
+
+    if (!videoUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'YouTube video URL is required'
+      });
+    }
+
+    const videoId = getYouTubeVideoId(videoUrl);
+
+    if (!videoId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid YouTube video URL'
+      });
+    }
+
+    // Use the existing collectAndAnalyze logic with the extracted videoId
+    req.params.sourceType = 'youtube';
+    req.params.sourceId = videoId;
+    return exports.collectAndAnalyze(req, res);
+
+  } catch (error) {
+    console.error(`Error in collectAndAnalyzeFromUrl:`, error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to collect and analyze data from URL',
+      message: error.message
+    });
+  }
+};
+
+
+// --- The following functions are kept for frontend utility purposes ---
 
 exports.getSupportedSources = async (req, res) => {
   try {
@@ -59,22 +117,6 @@ exports.getSupportedSources = async (req, res) => {
         requiredParams: ['subreddit'],
         optionalParams: ['limit', 'sort'],
         realTimeSupported: true
-      },
-      {
-        type: 'twitch',
-        name: 'Twitch',
-        description: 'Collect chat messages from Twitch streams',
-        requiredParams: ['channelName'],
-        optionalParams: ['duration'],
-        realTimeSupported: true
-      },
-      {
-        type: 'discord',
-        name: 'Discord',
-        description: 'Collect messages from Discord servers/channels',
-        requiredParams: ['serverId'],
-        optionalParams: ['channelId', 'limit'],
-        realTimeSupported: true
       }
     ];
 
@@ -92,76 +134,6 @@ exports.getSupportedSources = async (req, res) => {
   }
 };
 
-exports.validateSource = async (req, res) => {
-  try {
-    const { sourceType, sourceId } = req.params;
-
-    if (!sourceType || !sourceId) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Source type and source ID are required' 
-      });
-    }
-
-    // Basic validation logic
-    let isValid = false;
-    let message = '';
-
-    switch (sourceType) {
-      case 'youtube':
-        // Basic YouTube video ID validation
-        isValid = /^[a-zA-Z0-9_-]{11}$/.test(sourceId);
-        message = isValid ? 'Valid YouTube video ID' : 'Invalid YouTube video ID format';
-        break;
-      
-      case 'twitter':
-        // Basic Twitter search term validation
-        isValid = sourceId.length > 0 && sourceId.length <= 500;
-        message = isValid ? 'Valid Twitter search term' : 'Invalid Twitter search term';
-        break;
-      
-      case 'reddit':
-        // Basic subreddit name validation
-        isValid = /^[a-zA-Z0-9_]{1,20}$/.test(sourceId);
-        message = isValid ? 'Valid subreddit name' : 'Invalid subreddit name format';
-        break;
-      
-      case 'twitch':
-        // Basic Twitch channel name validation
-        isValid = /^[a-zA-Z0-9_]{4,25}$/.test(sourceId);
-        message = isValid ? 'Valid Twitch channel name' : 'Invalid Twitch channel name format';
-        break;
-      
-      case 'discord':
-        // Basic Discord server ID validation
-        isValid = /^\d{17,19}$/.test(sourceId);
-        message = isValid ? 'Valid Discord server ID' : 'Invalid Discord server ID format';
-        break;
-      
-      default:
-        isValid = false;
-        message = 'Unsupported source type';
-    }
-
-    res.json({
-      success: true,
-      data: {
-        sourceType,
-        sourceId,
-        isValid,
-        message
-      }
-    });
-  } catch (error) {
-    console.error('Error validating source:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to validate source',
-      message: error.message
-    });
-  }
-};
-
 exports.getSourceStatus = async (req, res) => {
   try {
     // This would check the status of various APIs/services
@@ -171,20 +143,12 @@ exports.getSourceStatus = async (req, res) => {
         message: process.env.YOUTUBE_API_KEY ? 'API key configured' : 'API key not configured - using mock data'
       },
       twitter: {
-        available: !!process.env.TWITTER_API_KEY,
-        message: process.env.TWITTER_API_KEY ? 'API key configured' : 'API key not configured - using mock data'
+        available: false,
+        message: 'Twitter API v2 required - not implemented'
       },
       reddit: {
         available: true,
         message: 'Using Reddit public API - no key required'
-      },
-      twitch: {
-        available: !!process.env.TWITCH_CLIENT_ID,
-        message: process.env.TWITCH_CLIENT_ID ? 'Client ID configured' : 'Client ID not configured - using mock data'
-      },
-      discord: {
-        available: !!process.env.DISCORD_BOT_TOKEN,
-        message: process.env.DISCORD_BOT_TOKEN ? 'Bot token configured' : 'Bot token not configured - using mock data'
       }
     };
 
@@ -201,5 +165,3 @@ exports.getSourceStatus = async (req, res) => {
     });
   }
 };
-
-module.exports = exports;

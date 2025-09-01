@@ -57,72 +57,120 @@ const Dashboard: React.FC = () => {
       {/* Overview Cards */}
       <Grid container spacing={3} mb={3}>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card
+            sx={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #a5b4fc 100%)',
+              color: '#fff',
+              borderRadius: 4,
+              boxShadow: '0 4px 24px 0 rgba(99,102,241,0.10)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.03)',
+                boxShadow: '0 8px 32px 0 rgba(99,102,241,0.18)',
+              },
+            }}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography sx={{ opacity: 0.85 }} gutterBottom>
                     Total Today
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     {mockData.overview.totalToday}
                   </Typography>
                 </Box>
-                <PsychologyIcon color="primary" sx={{ fontSize: 40 }} />
+                <PsychologyIcon sx={{ fontSize: 44, opacity: 0.85 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card
+            sx={{
+              background: 'linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%)',
+              color: '#fff',
+              borderRadius: 4,
+              boxShadow: '0 4px 24px 0 rgba(244,114,182,0.10)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.03)',
+                boxShadow: '0 8px 32px 0 rgba(244,114,182,0.18)',
+              },
+            }}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography sx={{ opacity: 0.85 }} gutterBottom>
                     Last Hour
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     {mockData.overview.totalLastHour}
                   </Typography>
                 </Box>
-                <TrendingUpIcon color="secondary" sx={{ fontSize: 40 }} />
+                <TrendingUpIcon sx={{ fontSize: 44, opacity: 0.85 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card
+            sx={{
+              background: 'linear-gradient(135deg, #34d399 0%, #a7f3d0 100%)',
+              color: '#fff',
+              borderRadius: 4,
+              boxShadow: '0 4px 24px 0 rgba(52,211,153,0.10)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.03)',
+                boxShadow: '0 8px 32px 0 rgba(52,211,153,0.18)',
+              },
+            }}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography sx={{ opacity: 0.85 }} gutterBottom>
                     Avg Score Today
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     {mockData.overview.averageScoreToday.toFixed(2)}
                   </Typography>
                 </Box>
-                <LanguageIcon color="success" sx={{ fontSize: 40 }} />
+                <LanguageIcon sx={{ fontSize: 44, opacity: 0.85 }} />
               </Box>
             </CardContent>
           </Card>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card
+            sx={{
+              background: 'linear-gradient(135deg, #38bdf8 0%, #bae6fd 100%)',
+              color: '#fff',
+              borderRadius: 4,
+              boxShadow: '0 4px 24px 0 rgba(56,189,248,0.10)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px) scale(1.03)',
+                boxShadow: '0 8px 32px 0 rgba(56,189,248,0.18)',
+              },
+            }}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
-                  <Typography color="textSecondary" gutterBottom>
+                  <Typography sx={{ opacity: 0.85 }} gutterBottom>
                     Data Sources
                   </Typography>
-                  <Typography variant="h4">
+                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     {Object.keys(mockData.sourceDistribution).length}
                   </Typography>
                 </Box>
-                <DataUsageIcon color="info" sx={{ fontSize: 40 }} />
+                <DataUsageIcon sx={{ fontSize: 44, opacity: 0.85 }} />
               </Box>
             </CardContent>
           </Card>

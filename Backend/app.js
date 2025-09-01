@@ -1,13 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-const sentimentRoutes = require('./src/api/sentiment');
-const analyticsRoutes = require('./src/api/analytics');
-const dataSourceRoutes = require('./src/api/dataSources');
+const sentimentRoutes = require('./src/routes/sentiment');
+const analyticsRoutes = require('./src/routes/analytics');
+const dataSourceRoutes = require('./src/routes/dataSources');
 
 const app = express();
 
 // Middleware
 app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  credentials: true
+}));
   origin: process.env.FRONTEND_URL || "*",
   credentials: true
 }));
@@ -33,6 +36,7 @@ app.get('/health', (req, res) => {
 app.use('/api/sentiment', sentimentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/data', dataSourceRoutes);
+
 
 // Default route
 app.get('/', (req, res) => {
