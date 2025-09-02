@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Components
-import Header from './components/Layout/Header';
-import Dashboard from './components/Dashboard/Dashboard';
-import SentimentAnalysis from './components/SentimentAnalysis/SentimentAnalysis';
-import DataSources from './components/DataSources/DataSources';
-import Analytics from './components/Analytics/Analytics';
+import Header from './components/Layout/Header.jsx';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
+import SentimentAnalysis from './components/SentimentAnalysis/SentimentAnalysis.jsx';
+import DataSources from './components/DataSources/DataSources.jsx';
+import Analytics from './components/Analytics/Analytics.jsx';
 import RealTimeMonitor from './components/RealTime/RealTimeMonitor';
 import Contact from './components/Static/Contact';
-import Login from './components/Auth/Login';
-import SignUp from './components/Auth/SignUp';
+import Login from './components/Auth/Login.jsx';
+import SignUp from './components/Auth/SignUp.jsx';
 
 function App() {
   return (
