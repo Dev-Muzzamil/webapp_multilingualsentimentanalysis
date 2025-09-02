@@ -1,118 +1,68 @@
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app-body {
-  display: flex;
-  flex: 1;
-}
-
-
-.app-main {
-  flex: 1;
-  padding-left: 0;
-  transition: margin-left 0.3s ease;
-  overflow-x: auto;
-  padding-top: 64px; /* Height of AppBar for desktop */
-}
-
-@media (max-width: 599.95px) {
-  .app-main {
-    margin-left: 0;
-    padding-top: 56px; /* Height of AppBar for mobile */
+/* Cyber-modern utility classes */
+@layer utilities {
+  /* Sentiment Analysis Styles */
+  .sentiment-positive {
+    @apply text-neon-green font-bold neon-text;
   }
-}
 
-@media (min-width: 600px) {
-  .app-main {
-    margin-left: 240px;
+  .sentiment-negative {
+    @apply text-neon-pink font-bold neon-text;
   }
-}
 
-@media (max-width: 599.95px) {
-  .app-main {
-    margin-left: 0;
+  .sentiment-neutral {
+    @apply text-neon-yellow font-bold neon-text;
   }
-}
 
-/* Sentiment Analysis Styles */
-.sentiment-positive {
-  color: #4caf50;
-  font-weight: bold;
-}
-
-.sentiment-negative {
-  color: #f44336;
-  font-weight: bold;
-}
-
-.sentiment-neutral {
-  color: #ff9800;
-  font-weight: bold;
-}
-
-/* Chart Container */
-.chart-container {
-  position: relative;
-  height: 400px;
-  margin: 16px 0;
-}
-
-.chart-container canvas {
-  max-height: 400px !important;
-}
-
-/* Real-time indicator */
-.real-time-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.real-time-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #4caf50;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
+  /* Chart Container */
+  .chart-container {
+    @apply relative h-96 my-4 p-4 glass rounded-2xl border border-white/10;
   }
-  50% {
-    opacity: 0.5;
+
+  .chart-container canvas {
+    max-height: 400px !important;
   }
-  100% {
-    opacity: 1;
+
+  /* Real-time indicator */
+  .real-time-indicator {
+    @apply inline-flex items-center gap-2;
   }
-}
 
-/* Loading spinner */
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
+  .real-time-dot {
+    @apply w-2 h-2 rounded-full bg-neon-green animate-pulse-slow;
+  }
 
-/* Error message */
-.error-message {
-  color: #f44336;
-  background-color: #ffebee;
-  padding: 16px;
-  border-radius: 4px;
-  margin: 16px 0;
-}
+  /* Loading spinner */
+  .loading-spinner {
+    @apply flex justify-center items-center p-5;
+  }
 
-/* Success message */
-.success-message {
-  color: #4caf50;
-  background-color: #e8f5e8;
-  padding: 16px;
-  border-radius: 4px;
-  margin: 16px 0;
+  /* Error message */
+  .error-message {
+    @apply text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-lg my-4 backdrop-blur-sm;
+  }
+
+  /* Success message */
+  .success-message {
+    @apply text-green-400 bg-green-900/20 border border-green-500/30 p-4 rounded-lg my-4 backdrop-blur-sm;
+  }
+
+  /* Cyber card */
+  .cyber-card {
+    @apply glass rounded-2xl p-6 border border-white/10 hover:border-neon-blue/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-blue/10;
+  }
+
+  /* Cyber button */
+  .cyber-button {
+    @apply bg-gradient-to-r from-neon-blue to-neon-purple text-white font-medium py-2 px-6 rounded-lg border border-white/20 hover:from-neon-purple hover:to-neon-pink transition-all duration-300 hover:shadow-lg hover:shadow-neon-blue/30 active:scale-95;
+  }
+
+  /* Cyber input */
+  .cyber-input {
+    @apply bg-white/5 border border-white/20 rounded-lg p-3 text-white placeholder-gray-400 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 transition-all duration-300 backdrop-blur-sm;
+  }
+
+  /* Data grid */
+  .data-grid {
+    @apply cyber-grid bg-black/20;
+  }
 }

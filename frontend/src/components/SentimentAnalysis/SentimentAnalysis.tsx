@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  CircularProgress,
-  Alert,
-  Chip,
-} from '@mui/material';
-import { Send as SendIcon } from '@mui/icons-material';
+import Page from '../Common/Page';
 
 interface SentimentResult {
   text: string;
@@ -69,22 +57,16 @@ const SentimentAnalysis: React.FC = () => {
     }
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' && event.ctrlKey) {
-      handleAnalyze();
-    }
-  };
-
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case 'positive':
-        return 'success';
+        return 'text-green-600 bg-green-50 border-green-200';
       case 'negative':
-        return 'error';
+        return 'text-red-600 bg-red-50 border-red-200';
       case 'neutral':
-        return 'warning';
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
       default:
-        return 'default';
+        return 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
@@ -102,198 +84,67 @@ const SentimentAnalysis: React.FC = () => {
   };
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Sentiment Analysis
-      </Typography>
-
-      <Grid container spacing={3}>
-        {/* Input Section */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Analyze Text
-              </Typography>
-              
-              <TextField
-                fullWidth
-                multiline
-                rows={6}
-                variant="outlined"
-                placeholder="Enter text to analyze sentiment... (Ctrl+Enter to analyze)"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyPress}
-                margin="normal"
-              />
-
-              {error && (
-                <Alert severity="error" sx={{ mt: 2 }}>
-                  {error}
-                </Alert>
+    <Page
+      title="Sentiment Analysis"
+      subtitle="Analyze the emotional tone of your text using advanced AI models that support multiple languages."
+      actions={
+        <button onClick={handleAnalyze} disabled={loading || !text.trim()} className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-black disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">Analyze</button>
+      }
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="border border-gray-200 p-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Enter Text to Analyze</h2>
+          <textarea
+            className="w-full h-48 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            placeholder="Enter text to analyze sentiment... (Supports multiple languages)"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"><p className="text-red-600">{error}</p></div>
+          )}
+          <div className="flex items-center justify-between mt-4">
+            <span className="text-sm text-gray-500">{text.length} characters</span>
+            <button onClick={handleAnalyze} disabled={loading || !text.trim()} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2">
+              {loading ? (<><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Analyzing...</>) : (<>Analyze</>)}
+            </button>
+          </div>
+        </div>
+        <div className="border border-gray-200 p-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Analysis Results</h2>
+          {!result && !loading && (
+            <div className="text-center py-12"><div className="text-6xl mb-4">🤖</div><p className="text-gray-500">Enter text and click "Analyze" to see results</p></div>
+          )}
+          {loading && (
+            <div className="text-center py-12"><div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p className="text-gray-600">Analyzing sentiment...</p></div>
+          )}
+          {result && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-6xl mb-4">{getSentimentIcon(result.sentiment.sentiment)}</div>
+                <span className={`inline-block px-4 py-2 rounded-lg border-2 font-semibold text-lg ${getSentimentColor(result.sentiment.sentiment)}`}>
+                  {result.sentiment.sentiment.toUpperCase()}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg"><p className="text-sm text-gray-600 mb-1">Score</p><p className="text-2xl font-bold text-gray-900">{result.sentiment.score.toFixed(2)}</p></div>
+                <div className="bg-gray-50 p-4 rounded-lg"><p className="text-sm text-gray-600 mb-1">Confidence</p><p className="text-2xl font-bold text-gray-900">{(result.sentiment.confidence * 100).toFixed(1)}%</p></div>
+                <div className="bg-gray-50 p-4 rounded-lg"><p className="text-sm text-gray-600 mb-1">Language</p><p className="text-xl font-semibold text-gray-900">{result.language.toUpperCase()}</p></div>
+                <div className="bg-gray-50 p-4 rounded-lg"><p className="text-sm text-gray-600 mb-1">Method</p><p className="text-xl font-semibold text-gray-900">{result.sentiment.method || 'AI Model'}</p></div>
+              </div>
+              {result.translation && (
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200"><p className="text-sm text-blue-600 font-medium mb-2">Translation (EN)</p><p className="text-gray-900 italic">"{result.translation}"</p></div>
               )}
-
-              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" color="textSecondary">
-                  {text.length} characters
-                </Typography>
-                
-                <Button
-                  variant="contained"
-                  endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
-                  onClick={handleAnalyze}
-                  disabled={loading || !text.trim()}
-                >
-                  {loading ? 'Analyzing...' : 'Analyze'}
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Results Section */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Analysis Results
-              </Typography>
-
-              {!result && !loading && (
-                <Box textAlign="center" py={4}>
-                  <Typography color="textSecondary">
-                    Enter text and click "Analyze" to see sentiment analysis results
-                  </Typography>
-                </Box>
+              <div className="bg-gray-50 p-4 rounded-lg"><p className="text-sm text-gray-600 font-medium mb-2">Original Text</p><p className="text-gray-900">"{result.text}"</p></div>
+              {result.warning && (
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200"><p className="text-yellow-800">{result.warning}</p></div>
               )}
-
-              {loading && (
-                <Box textAlign="center" py={4}>
-                  <CircularProgress />
-                  <Typography variant="body2" color="textSecondary" mt={2}>
-                    Analyzing sentiment...
-                  </Typography>
-                </Box>
-              )}
-
-              {result && (
-                <Box>
-                  {/* Sentiment Result */}
-                  <Box textAlign="center" mb={3}>
-                    <Typography variant="h2" mb={1}>
-                      {getSentimentIcon(result.sentiment.sentiment)}
-                    </Typography>
-                    <Chip
-                      label={`${result.sentiment.sentiment.toUpperCase()}`}
-                      color={getSentimentColor(result.sentiment.sentiment) as any}
-                      size="large"
-                      sx={{ fontSize: '1.1rem', fontWeight: 'bold' }}
-                    />
-                  </Box>
-
-                  {/* Details */}
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Score
-                      </Typography>
-                      <Typography variant="h6">
-                        {result.sentiment.score.toFixed(2)}
-                      </Typography>
-                    </Grid>
-                    
-                    <Grid item xs={6}>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Confidence
-                      </Typography>
-                      <Typography variant="h6">
-                        {(result.sentiment.confidence * 100).toFixed(1)}%
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Language
-                      </Typography>
-                      <Typography variant="h6">
-                        {result.language.toUpperCase()}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Typography variant="subtitle2" color="textSecondary">
-                        Method
-                      </Typography>
-                      <Typography variant="h6">
-                        {result.sentiment.method || 'N/A'}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  {/* Translation */}
-                  {result.translation && (
-                    <Box mt={3}>
-                      <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                        Translation (EN)
-                      </Typography>
-                      <Typography variant="body1" sx={{ fontStyle: 'italic' }}>
-                        "{result.translation}"
-                      </Typography>
-                    </Box>
-                  )}
-
-                  {/* Original Text */}
-                  <Box mt={3}>
-                    <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                      Original Text
-                    </Typography>
-                    <Typography variant="body1">
-                      "{result.text}"
-                    </Typography>
-                  </Box>
-
-                  {/* Warning */}
-                  {result.warning && (
-                    <Alert severity="warning" sx={{ mt: 2 }}>
-                      {result.warning}
-                    </Alert>
-                  )}
-
-                  {/* Timestamp */}
-                  <Typography variant="caption" color="textSecondary" display="block" mt={2}>
-                    Analyzed: {new Date(result.timestamp).toLocaleString()}
-                  </Typography>
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Instructions */}
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                How it works
-              </Typography>
-              <Typography variant="body1" paragraph>
-                Our multilingual sentiment analysis system processes text through several steps:
-              </Typography>
-              <ol>
-                <li><strong>Language Detection:</strong> Automatically identifies the language of your text</li>
-                <li><strong>Translation:</strong> Translates non-English text to English for better analysis</li>
-                <li><strong>Preprocessing:</strong> Cleans and normalizes the text</li>
-                <li><strong>Sentiment Analysis:</strong> Analyzes emotional tone using multiple methods</li>
-              </ol>
-              <Typography variant="body2" color="textSecondary" mt={2}>
-                The system supports multiple languages and provides confidence scores for reliability assessment.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+              <p className="text-sm text-gray-500 text-center">Analyzed: {new Date(result.timestamp).toLocaleString()}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </Page>
   );
 };
 

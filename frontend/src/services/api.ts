@@ -11,6 +11,22 @@ const api = axios.create({
   },
 });
 
+// Attach preferred language header if available
+api.interceptors.request.use((config) => {
+  try {
+    const lang = localStorage.getItem('preferred_language');
+    if (lang) {
+      config.headers = config.headers || {};
+      // Standard header for content-language preference
+      const headers = config.headers as Record<string, string>;
+      headers['Accept-Language'] = lang;
+    }
+  } catch {
+    // ignore
+  }
+  return config;
+});
+
 // Response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,

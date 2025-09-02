@@ -64,7 +64,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="chart-container" style={{ height: '300px' }}>
+    <div className="chart-container w-full h-64 sm:h-72 md:h-80 lg:h-96">
       <Pie data={chartData} options={options} />
     </div>
   );
