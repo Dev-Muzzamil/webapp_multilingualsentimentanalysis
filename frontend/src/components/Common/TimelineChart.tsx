@@ -10,7 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { TimelineData } from '../../types';
+import type { TimelineData } from '../../types';
 
 ChartJS.register(
   CategoryScale,

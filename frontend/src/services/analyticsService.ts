@@ -1,5 +1,5 @@
 import api from './api';
-import { AnalyticsData, DashboardData } from '../types';
+import type { AnalyticsData, DashboardData } from '../types';
 
 export const analyticsService = {
   // Get analytics data
