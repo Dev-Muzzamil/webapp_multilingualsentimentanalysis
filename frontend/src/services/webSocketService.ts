@@ -1,11 +1,11 @@
-import { io, Socket } from 'socket.io-client';
-import { WebSocketMessage, RealTimeAnalysis, SentimentResult } from '../types';
+import io from 'socket.io-client';
+import type { RealTimeAnalysis, SentimentResult } from '../types';
 
 class WebSocketService {
-  private socket: Socket | null = null;
+  private socket: any | null = null;
   private listeners: Map<string, Function[]> = new Map();
 
-  connect(url?: string): Promise<Socket> {
+  connect(url?: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const wsUrl = url || import.meta.env.VITE_WS_URL || 'http://localhost:5000';
       
@@ -25,12 +25,12 @@ class WebSocketService {
         console.log('WebSocket disconnected');
       });
 
-      this.socket.on('connect_error', (error) => {
+      this.socket.on('connect_error', (error: any) => {
         console.error('WebSocket connection error:', error);
         reject(error);
       });
 
-      this.socket.on('error', (error) => {
+      this.socket.on('error', (error: any) => {
         console.error('WebSocket error:', error);
         this.emit('error', error);
       });

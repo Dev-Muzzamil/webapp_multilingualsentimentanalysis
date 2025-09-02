@@ -1,5 +1,5 @@
 import api from './api';
-import { SentimentResult } from '../types';
+import type { SentimentResult } from '../types';
 
 export const sentimentService = {
   // Analyze single text

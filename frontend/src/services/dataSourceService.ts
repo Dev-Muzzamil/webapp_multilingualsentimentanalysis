@@ -1,5 +1,5 @@
 import api from './api';
-import { DataSource, YouTubeData } from '../types';
+import type { DataSource, YouTubeData } from '../types';
 
 export const dataSourceService = {
   // Get list of supported data sources
