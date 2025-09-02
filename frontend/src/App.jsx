@@ -6,8 +6,8 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 import SentimentAnalysis from './components/SentimentAnalysis/SentimentAnalysis.jsx';
 import DataSources from './components/DataSources/DataSources.jsx';
 import Analytics from './components/Analytics/Analytics.jsx';
-import RealTimeMonitor from './components/RealTime/RealTimeMonitor';
-import Contact from './components/Static/Contact';
+import RealTimeMonitor from './components/RealTime/RealTimeMonitor.jsx';
+import Contact from './components/Static/Contact.jsx';
 import Login from './components/Auth/Login.jsx';
 import SignUp from './components/Auth/SignUp.jsx';
 

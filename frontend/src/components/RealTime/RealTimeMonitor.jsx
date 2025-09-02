@@ -1,7 +1,7 @@
 import React from 'react';
-import Page from '../Common/Page';
+import Page from '../Common/Page.jsx';
 
-const RealTimeMonitor: React.FC = () => {
+const RealTimeMonitor = () => {
   return (
     <Page
       title="Real-time Monitor"
