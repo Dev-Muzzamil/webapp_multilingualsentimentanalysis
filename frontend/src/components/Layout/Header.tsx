@@ -1,63 +1,130 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
 
-interface HeaderProps {
-  onMenuClick: () => void;
-}
+const navLinks = [
+  { text: 'Services', path: '/sentiment' },
+  { text: 'Cases', path: '/analytics' },
+  { text: 'Company', path: '/data-sources' },
+  { text: 'Insights', path: '/real-time' },
+  { text: 'Contacts', path: '/contact' },
+];
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState<string>('en');
+
+  const languages = [
+    { code: 'en', label: 'EN' },
+    { code: 'hi', label: 'HI' },
+    { code: 'es', label: 'ES' },
+    { code: 'fr', label: 'FR' },
+    { code: 'bn', label: 'BN' },
+    { code: 'vi', label: 'VI' },
+  ];
+
+  useEffect(() => {
+    const stored = localStorage.getItem('preferred_language');
+    if (stored) setSelectedLang(stored);
+  }, []);
+
+  const changeLanguage = (code: string) => {
+    setSelectedLang(code);
+    localStorage.setItem('preferred_language', code);
+    // set html lang attribute for accessibility / SEO
+  try { document.documentElement.lang = code; } catch { /* ignore */ }
+    setLangOpen(false);
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
-      <div className="flex items-center justify-between px-6 py-4">
-        {/* Menu Button */}
-        <button
-          onClick={onMenuClick}
-          className="p-2 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple hover:from-neon-purple hover:to-neon-pink transition-all duration-300 hover:shadow-lg hover:shadow-neon-blue/30 active:scale-95 md:hidden"
-        >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
-        {/* Logo and Title */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-neon-blue to-neon-purple rounded-lg flex items-center justify-center animate-glow">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 isolate bg-slate-900 text-slate-100 backdrop-blur supports-[backdrop-filter]:bg-slate-900 border-b border-slate-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 min-w-0">
+            <div className="flex items-center cursor-pointer flex-shrink-0 whitespace-nowrap" onClick={() => navigate('/') }>
+              <span className="text-lg md:text-xl font-semibold tracking-tight">SentimentAI</span>
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent neon-text">
-              Multilingual Sentiment Analysis
-            </h1>
+
+            <nav className="hidden lg:flex flex-1 items-center justify-center gap-8 min-w-0 overflow-x-auto">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <button
+                    key={link.text}
+                    onClick={() => navigate(link.path)}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`relative inline-flex items-center text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors duration-200 ${
+                      isActive ? 'text-white' : 'text-slate-300 hover:text-white'
+                    } after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-white/80 after:transition-all after:duration-300 after:ease-out ${
+                      isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'
+                    }`}
+                  >
+                    {link.text}
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="hidden lg:flex flex-shrink-0 items-center gap-4 relative">
+              {/* Language selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangOpen((s) => !s)}
+                  aria-haspopup="listbox"
+                  aria-expanded={!!langOpen}
+                  className="px-3 py-2 bg-slate-800 text-slate-200 text-sm font-medium rounded-md hover:bg-slate-700 transition-colors flex items-center gap-2"
+                  title="Preferred language"
+                >
+                  <span className="text-xs font-semibold">{selectedLang.toUpperCase()}</span>
+                  <svg className="w-4 h-4 text-slate-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" />
+                  </svg>
+                </button>
+
+                {langOpen && (
+                  <ul role="listbox" aria-label="Select language" tabIndex={-1} className="absolute right-0 mt-2 w-32 bg-slate-800 text-slate-100 rounded-md shadow-lg border border-slate-700 z-50">
+                    {languages.map((l) => (
+                      <li
+                        key={l.code}
+                        role="option"
+                        aria-selected={selectedLang === l.code ? true : false}
+                        onClick={() => changeLanguage(l.code)}
+                        className={`px-3 py-2 text-sm cursor-pointer hover:bg-slate-700 ${selectedLang === l.code ? 'font-semibold bg-slate-700' : ''}`}
+                      >
+                        {l.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <button
+                onClick={() => navigate('/contact')}
+                className="px-4 py-2 bg-white text-slate-900 text-sm font-semibold rounded-md hover:bg-slate-100 transition-colors"
+              >
+                Get in touch
+              </button>
+            </div>
+
+            <div className="lg:hidden">
+              <button 
+                aria-label="Open menu" 
+                onClick={() => setSidebarOpen(true)} 
+                className="p-2 text-slate-200 hover:text-white transition-colors duration-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center space-x-3">
-          {/* Notifications */}
-          <button className="relative p-3 glass rounded-lg border border-white/20 hover:border-neon-blue/50 transition-all duration-300 group">
-            <svg className="w-5 h-5 text-gray-300 group-hover:text-neon-blue transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM11 4H4v8a4 4 0 008 0V4z" />
-            </svg>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-neon-pink rounded-full animate-pulse"></div>
-          </button>
-
-          {/* Settings */}
-          <button className="p-3 glass rounded-lg border border-white/20 hover:border-neon-purple/50 transition-all duration-300 group">
-            <svg className="w-5 h-5 text-gray-300 group-hover:text-neon-purple transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-
-          {/* Real-time Status */}
-          <div className="flex items-center space-x-2 px-3 py-2 glass rounded-lg border border-white/20">
-            <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-300 font-cyber">LIVE</span>
-          </div>
-        </div>
-      </div>
-    </header>
+      </header>
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    </>
   );
 };
 

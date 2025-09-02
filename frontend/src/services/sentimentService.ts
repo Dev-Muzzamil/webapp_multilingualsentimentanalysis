@@ -4,7 +4,14 @@ import { SentimentResult } from '../types';
 export const sentimentService = {
   // Analyze single text
   analyzeSentiment: async (text: string): Promise<SentimentResult> => {
-    const response = await api.post('/api/sentiment/analyze', { text });
+    const payload: Record<string, unknown> = { text };
+    try {
+      const lang = localStorage.getItem('preferred_language');
+      if (lang) (payload as Record<string, unknown>)['language'] = lang;
+    } catch {
+      // ignore
+    }
+    const response = await api.post('/api/sentiment/analyze', payload);
     return response.data;
   },
 
