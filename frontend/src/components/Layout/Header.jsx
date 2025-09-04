@@ -3,11 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 
 const navLinks = [
-  { text: 'Services', path: '/sentiment' },
+  { text: 'Collect', path: '/collect' },
   { text: 'Analytics', path: '/analytics' },
-  { text: 'Sources', path: '/data-sources' },
-  { text: 'Monitor', path: '/real-time' },
-  { text: 'Contact', path: '/contact' },
+  { text: 'Upload', path: '/upload' },
+  { text: 'Account', path: '/account' },
 ];
 
 const Header = () => {
@@ -46,8 +45,8 @@ const Header = () => {
     <>
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-slate-900/95 backdrop-blur-lg border-b border-slate-800/50 shadow-2xl' 
-          : 'bg-transparent'
+          ? 'bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg' 
+          : 'bg-white/80 backdrop-blur-sm'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -56,12 +55,12 @@ const Header = () => {
               className="flex items-center cursor-pointer flex-shrink-0 whitespace-nowrap group" 
               onClick={() => navigate('/')}
             >
-              <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 SentimentAI
               </span>
             </div>
@@ -76,13 +75,13 @@ const Header = () => {
                     onClick={() => navigate(link.path)}
                     className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                       isActive 
-                        ? 'text-white bg-slate-800/50 backdrop-blur-sm' 
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/30'
+                        ? 'text-blue-600 bg-blue-50' 
+                        : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
                     }`}
                   >
                     {link.text}
                     {isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg -z-10"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg -z-10"></div>
                     )}
                   </button>
                 );
@@ -95,7 +94,7 @@ const Header = () => {
               <div className="relative">
                 <button
                   onClick={() => setLangOpen(!langOpen)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-200"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-lg transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
@@ -107,13 +106,13 @@ const Header = () => {
                 </button>
 
                 {langOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-48 bg-slate-800/95 backdrop-blur-lg border border-slate-700 rounded-xl shadow-2xl py-2 z-50">
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white/95 backdrop-blur-lg border border-gray-200 rounded-xl shadow-xl py-2 z-50">
                     {languages.map((l) => (
                       <button
                         key={l.code}
                         onClick={() => handleLanguageChange(l.code)}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-slate-700/50 transition-colors ${
-                          selectedLang === l.code ? 'text-cyan-400 font-semibold bg-slate-700/30' : 'text-slate-300'
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${
+                          selectedLang === l.code ? 'text-blue-600 font-semibold bg-blue-50' : 'text-gray-700'
                         }`}
                       >
                         {l.label}
@@ -127,13 +126,13 @@ const Header = () => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => navigate('/signup')}
-                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md"
                 >
                   Get Started
                 </button>
@@ -144,9 +143,9 @@ const Header = () => {
             <div className="lg:hidden">
               <button 
                 onClick={() => setSidebarOpen(true)} 
-                className="p-2 text-slate-300 hover:text-white bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-all duration-200"
+                className="p-2 text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-lg transition-all duration-200"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -156,7 +155,7 @@ const Header = () => {
 
         {/* Mobile Language Dropdown */}
         {langOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-b border-slate-800">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-gray-200">
             <div className="px-4 py-3">
               <div className="grid grid-cols-3 gap-2">
                 {languages.map((l) => (
@@ -165,8 +164,8 @@ const Header = () => {
                     onClick={() => handleLanguageChange(l.code)}
                     className={`px-3 py-2 text-sm rounded-lg transition-colors ${
                       selectedLang === l.code 
-                        ? 'text-cyan-400 font-semibold bg-slate-800' 
-                        : 'text-slate-300 hover:bg-slate-800/50'
+                        ? 'text-blue-600 font-semibold bg-blue-50' 
+                        : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     {l.label}

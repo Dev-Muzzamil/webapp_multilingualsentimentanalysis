@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import type { TimelineData } from '../../types';
 
 ChartJS.register(
   CategoryScale,
@@ -22,11 +21,7 @@ ChartJS.register(
   Legend
 );
 
-interface TimelineChartProps {
-  data: TimelineData[];
-}
-
-const TimelineChart: React.FC<TimelineChartProps> = ({ data }) => {
+const TimelineChart = ({ data }) => {
   const chartData = {
     labels: data.map(item => item.time),
     datasets: [
@@ -59,7 +54,7 @@ const TimelineChart: React.FC<TimelineChartProps> = ({ data }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: 'top',
       },
       title: {
         display: false,

@@ -3,18 +3,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Components
 import Header from './components/Layout/Header.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-import SentimentAnalysis from './components/SentimentAnalysis/SentimentAnalysis.jsx';
-import DataSources from './components/DataSources/DataSources.jsx';
+import DataCollection from './components/DataCollection/DataCollection.jsx';
 import Analytics from './components/Analytics/Analytics.jsx';
-import RealTimeMonitor from './components/RealTime/RealTimeMonitor';
-import Contact from './components/Static/Contact';
+import Upload from './components/Upload/Upload.jsx';
+import Account from './components/Account/Account.jsx';
 import Login from './components/Auth/Login.jsx';
 import SignUp from './components/Auth/SignUp.jsx';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <Routes>
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
@@ -28,11 +27,10 @@ function App() {
                 <div className="w-full">
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
-                    <Route path="/sentiment" element={<SentimentAnalysis />} />
-                    <Route path="/data-sources" element={<DataSources />} />
+                    <Route path="/collect" element={<DataCollection />} />
                     <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/real-time" element={<RealTimeMonitor />} />
-                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/upload" element={<Upload />} />
+                    <Route path="/account" element={<Account />} />
                   </Routes>
                 </div>
               </main>

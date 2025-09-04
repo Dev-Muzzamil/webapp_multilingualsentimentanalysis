@@ -1,29 +1,20 @@
-import api from './api';
-import type { AnalyticsData, DashboardData } from '../types';
+import api from './api.js';
 
 export const analyticsService = {
   // Get analytics data
-  getAnalytics: async (options?: {
-    timeRange?: 'hour' | 'day' | 'week' | 'month';
-    source?: string;
-    sourceId?: string;
-  }): Promise<{ success: boolean; data: AnalyticsData }> => {
+  getAnalytics: async (options) => {
     const response = await api.get('/api/analytics/analytics', { params: options });
     return response.data;
   },
 
   // Get dashboard data
-  getDashboardData: async (): Promise<{ success: boolean; data: DashboardData }> => {
+  getDashboardData: async () => {
     const response = await api.get('/api/analytics/dashboard');
     return response.data;
   },
 
   // Get analytics for specific source type
-  getSourceAnalytics: async (sourceType: string, timeRange?: string): Promise<{ 
-    success: boolean; 
-    data: AnalyticsData; 
-    sourceType: string 
-  }> => {
+  getSourceAnalytics: async (sourceType, timeRange) => {
     const response = await api.get(`/api/analytics/analytics/source/${sourceType}`, {
       params: { timeRange }
     });
@@ -31,11 +22,7 @@ export const analyticsService = {
   },
 
   // Compare multiple sources
-  compareSources: async (sources: string[], timeRange?: string): Promise<{ 
-    success: boolean; 
-    data: Record<string, AnalyticsData>; 
-    timeRange: string 
-  }> => {
+  compareSources: async (sources, timeRange) => {
     const response = await api.get('/api/analytics/analytics/compare', {
       params: { sources: sources.join(','), timeRange }
     });

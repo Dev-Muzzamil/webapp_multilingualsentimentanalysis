@@ -18,8 +18,7 @@ api.interceptors.request.use((config) => {
     if (lang) {
       config.headers = config.headers || {};
       // Standard header for content-language preference
-      const headers = config.headers as Record<string, string>;
-      headers['Accept-Language'] = lang;
+      config.headers['Accept-Language'] = lang;
     }
   } catch {
     // ignore

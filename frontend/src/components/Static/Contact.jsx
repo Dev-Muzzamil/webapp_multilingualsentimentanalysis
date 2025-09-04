@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Contact: React.FC = () => {
+const Contact = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-24 max-w-4xl mx-auto">
       <h1 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">Get in touch</h1>
       <p className="text-lg text-gray-600 mb-12">
-        Interested in collaborations, integrations, or have questions about our platform? Drop us a line and we’ll get back to you.
+        Interested in collaborations, integrations, or have questions about our platform? Drop us a line and we'll get back to you.
       </p>
 
       <div className="grid md:grid-cols-2 gap-10">

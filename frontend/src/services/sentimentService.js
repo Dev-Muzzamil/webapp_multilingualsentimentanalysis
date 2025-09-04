@@ -1,13 +1,12 @@
-import api from './api';
-import type { SentimentResult } from '../types';
+import api from './api.js';
 
 export const sentimentService = {
   // Analyze single text
-  analyzeSentiment: async (text: string): Promise<SentimentResult> => {
-    const payload: Record<string, unknown> = { text };
+  analyzeSentiment: async (text) => {
+    const payload = { text };
     try {
       const lang = localStorage.getItem('preferred_language');
-      if (lang) (payload as Record<string, unknown>)['language'] = lang;
+      if (lang) payload.language = lang;
     } catch {
       // ignore
     }
@@ -16,27 +15,19 @@ export const sentimentService = {
   },
 
   // Get sentiment analysis results with filters
-  getResults: async (filters?: {
-    source?: string;
-    sourceId?: string;
-    sentiment?: string;
-    language?: string;
-    startDate?: string;
-    endDate?: string;
-    limit?: number;
-  }): Promise<{ success: boolean; data: SentimentResult[]; count: number }> => {
+  getResults: async (filters) => {
     const response = await api.get('/api/analytics/results', { params: filters });
     return response.data;
   },
 
   // Get specific result by ID
-  getResult: async (id: string): Promise<{ success: boolean; data: SentimentResult }> => {
+  getResult: async (id) => {
     const response = await api.get(`/api/analytics/results/${id}`);
     return response.data;
   },
 
   // Delete result by ID
-  deleteResult: async (id: string): Promise<{ success: boolean; message: string }> => {
+  deleteResult: async (id) => {
     const response = await api.delete(`/api/analytics/results/${id}`);
     return response.data;
   },

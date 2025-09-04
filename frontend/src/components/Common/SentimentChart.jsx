@@ -21,15 +21,7 @@ ChartJS.register(
   ArcElement
 );
 
-interface SentimentChartProps {
-  data: {
-    positive: number;
-    negative: number;
-    neutral: number;
-  };
-}
-
-const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
+const SentimentChart = ({ data }) => {
   const chartData = {
     labels: ['Positive', 'Negative', 'Neutral'],
     datasets: [
@@ -55,7 +47,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: 'bottom',
       },
       title: {
         display: false,
